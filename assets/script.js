@@ -45,25 +45,32 @@ function dotsContainer() {
     if (currentSlide === i) {
       divDot.classList.add("dot_selected");
     }
-    currentBanner();
   }
 }
 dotsContainer();
+currentBanner();
 
 const dot = document.querySelectorAll(".dot");
+
+function changeSlide(nextSlide) {
+  dot[currentSlide].classList.remove("dot_selected");
+  if (nextSlide < 0) {
+    nextSlide = slides.length - 1;
+  }
+  if (nextSlide > slides.length - 1) {
+    nextSlide = 0;
+  }
+  dot[nextSlide].classList.add("dot_selected");
+  currentSlide = nextSlide;
+  currentBanner();
+}
 
 // Flèche gauche
 
 const arrowLeft = document.querySelector(".arrow_left");
 
 arrowLeft.addEventListener("click", () => {
-  dot[currentSlide].classList.remove("dot_selected");
-  currentSlide--;
-  if (currentSlide < 0) {
-    currentSlide = slides.length - 1;
-  }
-  dot[currentSlide].classList.add("dot_selected");
-  currentBanner();
+  changeSlide(currentSlide - 1);
 });
 
 // Fleche droite
@@ -71,27 +78,13 @@ arrowLeft.addEventListener("click", () => {
 const arrowRight = document.querySelector(".arrow_right");
 
 arrowRight.addEventListener("click", () => {
-  dot[currentSlide].classList.remove("dot_selected");
-  currentSlide++;
-
-  if (currentSlide > slides.length - 1) {
-    currentSlide = 0;
-  }
-  dot[currentSlide].classList.add("dot_selected");
-  currentBanner();
+  changeSlide(currentSlide + 1);
 });
 
 //dots quand on clique dessus, met le slide correspondant au dot
 
-dot.forEach((bulletpoint) => {
+dot.forEach((bulletpoint, index) => {
   bulletpoint.addEventListener("click", function () {
-    dot.forEach((bpt) => {
-      if (bpt !== this) {
-        bpt.classList.remove("dot_selected");
-      }
-      this.classList.add("dot_selected");
-      currentSlide = Array.prototype.indexOf.call(dot, this);
-      currentBanner();
-    });
+    changeSlide(index);
   });
 });
